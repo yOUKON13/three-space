@@ -6,6 +6,10 @@ import {Vector3} from "three";
 
 const scene = new THREE.Scene();
 
+const background = new THREE.TextureLoader().load("/background.jpg");
+scene.background = background;
+scene.backgroundIntensity = 0.05;
+
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
