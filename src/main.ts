@@ -5,6 +5,21 @@ import SpaceOrbit from "./SpaceOrbit";
 import {Vector3} from "three";
 import Saturn from "./Saturn";
 
+window.onresize = onResize;
+onResize();
+
+function onResize(){
+    if (window.innerWidth < 768) {
+        document.querySelectorAll(".accordion.active").forEach(acc => {
+            const btn = acc.querySelector("button.active");
+
+            btn.classList.remove("active");
+            acc.classList.remove("active");
+        });
+    }
+}
+
+
 const scene = new THREE.Scene();
 
 const background = new THREE.TextureLoader().load("/background.jpg");
@@ -52,12 +67,13 @@ const neptuneOrbit = new SpaceOrbit(scene, 1200);
 
 const buttons = document.querySelectorAll("button");
 let focusedObject = objects[0];
-let activeBtn: HTMLButtonElement = buttons[0];
+let activeBtn: HTMLButtonElement = buttons[1];
 
 document.querySelectorAll(".accordion").forEach((accordion) => {
     const button = accordion.querySelector("button");
 
     button.addEventListener("click", () => {
+        console.log(accordion);
         accordion.classList.toggle("active");
     })
 })
@@ -66,9 +82,9 @@ document.querySelectorAll(".panel__button").forEach((btn: HTMLButtonElement) => 
     btn.addEventListener("click", () => {
         focusedObject = objects[+btn.getAttribute("data-idx")];
 
-        if (activeBtn) {
+        if (activeBtn && btn.hasAttribute("data-idx")) {
             activeBtn.classList.remove("active");
-            if(activeBtn !== btn){
+            if (activeBtn !== btn) {
                 activeBtn.parentElement.classList.remove("active");
             }
             activeBtn = btn;
