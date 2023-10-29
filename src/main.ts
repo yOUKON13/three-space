@@ -3,6 +3,7 @@ import SpaceSphereObject from "./SpaceSphereObject";
 import Camera from "./Camera";
 import SpaceOrbit from "./SpaceOrbit";
 import {Vector3} from "three";
+import Saturn from "./Saturn";
 
 const scene = new THREE.Scene();
 
@@ -24,8 +25,15 @@ const mercuryOrbit = new SpaceOrbit(scene, 150);
 objects.push(new SpaceSphereObject("/venus.jpg", 0.25, new Vector3(3, 0, 300), scene));
 const venusOrbit = new SpaceOrbit(scene, 300);
 
-objects.push(new SpaceSphereObject("/earth.jpg", 0.2625, new Vector3(3, 0, 450), scene));
+const earth = new SpaceSphereObject("/earth.jpg", 0.2625, new Vector3(3, 0, 450), scene);
+objects.push(earth);
 const earthOrbit = new SpaceOrbit(scene, 450);
+
+const moon = new SpaceSphereObject("/moon.jpg", 0.07, new Vector3(2, 0, 2), scene);
+moon.parent.parent = earth.parent;
+objects.push(moon);
+const moonOrbit = new SpaceOrbit(scene, 2, new Vector3(0, 0, 0));
+moonOrbit.line.parent = earth.parent;
 
 objects.push(new SpaceSphereObject("/mars.jpg", 0.1389, new Vector3(3, 0, 600), scene));
 const marsOrbit = new SpaceOrbit(scene, 600);
@@ -33,30 +41,8 @@ const marsOrbit = new SpaceOrbit(scene, 600);
 objects.push(new SpaceSphereObject("/mars.jpg", 3, new Vector3(3, 0, 750), scene));
 const jupiterOrbit = new SpaceOrbit(scene, 750);
 
-const saturnPosition = new Vector3(3, 0, 900);
-objects.push(new SpaceSphereObject("/saturn.jpg", 2.5, saturnPosition, scene));
+objects.push(new Saturn(scene));
 const saturnOrbit = new SpaceOrbit(scene, 900);
-
-const geometry = new THREE.RingGeometry(3, 5, 64);
-var pos = geometry.attributes.position;
-var v3 = new THREE.Vector3();
-for (let i = 0; i < pos.count; i++) {
-    v3.fromBufferAttribute(pos, i);
-    geometry.attributes.uv.setXY(i, v3.length() < 4 ? 0 : 1, 1);
-}
-const texture = new THREE.TextureLoader().load("/saturn-ring.png");
-const material = new THREE.MeshBasicMaterial({
-    map: texture,
-    side: THREE.DoubleSide,
-    color: 0xffffff,
-    transparent: true
-});
-const mesh = new THREE.Mesh(geometry, material);
-mesh.castShadow = true;
-mesh.receiveShadow = true;
-mesh.position.copy(saturnPosition);
-mesh.rotation.set(-Math.PI / 2, 0, 0);
-scene.add(mesh);
 
 objects.push(new SpaceSphereObject("/uranus.jpg", 1.1, new Vector3(3, 0, 1050), scene));
 const uranusOrbit = new SpaceOrbit(scene, 1050);
@@ -64,17 +50,39 @@ const uranusOrbit = new SpaceOrbit(scene, 1050);
 objects.push(new SpaceSphereObject("/neptune.jpg", 0.105, new Vector3(3, 0, 1200), scene));
 const neptuneOrbit = new SpaceOrbit(scene, 1200);
 
+const buttons = document.querySelectorAll("button");
 let focusedObject = objects[0];
-document.querySelectorAll("button").forEach((btn, i) => {
+let activeBtn: HTMLButtonElement = buttons[0];
+
+document.querySelectorAll(".accordion").forEach((accordion) => {
+    const button = accordion.querySelector("button");
+
+    button.addEventListener("click", () => {
+        accordion.classList.toggle("active");
+    })
+})
+
+document.querySelectorAll(".panel__button").forEach((btn: HTMLButtonElement) => {
     btn.addEventListener("click", () => {
-        focusedObject = objects[i];
+        focusedObject = objects[+btn.getAttribute("data-idx")];
+
+        if (activeBtn) {
+            activeBtn.classList.remove("active");
+            if(activeBtn !== btn){
+                activeBtn.parentElement.classList.remove("active");
+            }
+            activeBtn = btn;
+            activeBtn.classList.add("active");
+        }
     },)
 })
 
 function animate() {
     requestAnimationFrame(animate);
 
-    objects.forEach(obj => obj.update(true));
+    objects[0].update(false);
+    objects.slice(1).forEach(obj => obj.update(true));
+
     camera.focusOnObject(focusedObject);
 
     camera.update();

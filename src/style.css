@@ -2,14 +2,95 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+    color: #fff;
 }
 
 body {
     overflow: hidden;
 }
 
+h2 {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
 .ui {
     position: absolute;
     top: 0;
     left: 0;
+}
+
+.ui-right {
+    left: unset;
+    right: 0;
+}
+
+.panel {
+    width: 18rem;
+    background-color: rgba(31, 31, 31, 0.4);
+    border: 3px solid #2d2d2d;
+    margin-bottom: 3rem;
+}
+
+.panel-right {
+    right: 0;
+}
+
+.panel__heading {
+    padding: 1rem;
+    border-bottom: 1px solid #2d2d2d;
+}
+
+.panel__button {
+    position: relative;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 400;
+    text-align: left;
+    width: 100%;
+    background: none;
+    border: none;
+}
+
+.panel__button:after {
+    position: absolute;
+    right: 1rem;
+    font-size: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    content: "+";
+}
+
+.accordion.active .panel__button:after {
+    content: "-";
+}
+
+.panel__button:hover, .panel__button.active {
+    color: #21e8e8;
+    background: rgba(72, 72, 72, 0.4);
+}
+
+.panel__heading, .panel__button {
+    padding: 1rem;
+    border-bottom: 1px solid #2d2d2d;
+}
+
+.accordion__data {
+    padding: 1rem;
+    display: none;
+}
+
+.accordion.active .accordion__data {
+    display: block;
+}
+
+.accordion__data p {
+    font-size: 0.75rem;
+    font-weight: 200;
+    margin-bottom: 0.25rem;
+}
+
+.accordion__data span{
+    font-weight: 400;
 }
