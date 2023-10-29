@@ -80,8 +80,8 @@ document.querySelectorAll(".panel__button").forEach((btn: HTMLButtonElement) => 
 function animate() {
     requestAnimationFrame(animate);
 
-    objects[0].update(false);
-    objects.slice(1).forEach(obj => obj.update(true));
+    objects[0].update(10);
+    objects.slice(1).forEach(obj => obj.update(-1));
 
     camera.focusOnObject(focusedObject);
 

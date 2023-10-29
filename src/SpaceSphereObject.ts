@@ -27,12 +27,14 @@ class SpaceSphereObject {
         this.parent.position.set(x, y, z);
     }
 
-    update(isOrbit) {
-        this.t += 0.01;
-        if (isOrbit) {
-            this.parent.position.x = this.basePosition.z * Math.cos(this.t);
-            this.parent.position.z = this.basePosition.z * Math.sin(this.t);
+    update(velocity=-1) {
+        if(velocity === -1){
+            velocity = this.basePosition.z;
         }
+
+        this.t += 0.01;
+        this.parent.position.x = velocity * Math.cos(this.t);
+        this.parent.position.z = velocity * Math.sin(this.t);
 
         this.object.rotation.x += this.rotateX;
         this.object.rotation.y += this.rotateY;
